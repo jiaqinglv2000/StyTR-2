@@ -16,6 +16,8 @@ from matplotlib import cm
 from function import normal
 import numpy as np
 import time
+
+#这个python文件主要用于运行模型，进行风格迁移工作
 def test_transform(size, crop):
     transform_list = []
    

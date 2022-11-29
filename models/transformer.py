@@ -9,6 +9,7 @@ import numpy as np
 import os
 device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
 os.environ["CUDA_VISIBLE_DEVICES"] = "2, 3"
+#transformer类
 class Transformer(nn.Module):
 
     def __init__(self, d_model=512, nhead=8, num_encoder_layers=3,
@@ -72,7 +73,7 @@ class Transformer(nn.Module):
 
         return hs
 
-
+#transformer编码器
 class TransformerEncoder(nn.Module):
 
     def __init__(self, encoder_layer, num_layers, norm=None):
@@ -96,7 +97,7 @@ class TransformerEncoder(nn.Module):
 
         return output
 
-
+#transformer解码器
 class TransformerDecoder(nn.Module):
 
     def __init__(self, decoder_layer, num_layers, norm=None, return_intermediate=False):
@@ -138,6 +139,7 @@ class TransformerDecoder(nn.Module):
         return output.unsqueeze(0)
 
 
+#单个的transformer编码器层
 class TransformerEncoderLayer(nn.Module):
 
     def __init__(self, d_model, nhead, dim_feedforward=2048, dropout=0.1,
@@ -157,6 +159,7 @@ class TransformerEncoderLayer(nn.Module):
         self.activation = _get_activation_fn(activation)
         self.normalize_before = normalize_before
 
+    #用于添加位置编码
     def with_pos_embed(self, tensor, pos: Optional[Tensor]):
         return tensor if pos is None else tensor + pos
 
@@ -199,7 +202,7 @@ class TransformerEncoderLayer(nn.Module):
             return self.forward_pre(src, src_mask, src_key_padding_mask, pos)
         return self.forward_post(src, src_mask, src_key_padding_mask, pos)
 
-
+#单个的transformer解码器层
 class TransformerDecoderLayer(nn.Module):
 
     def __init__(self, d_model, nhead, dim_feedforward=2048, dropout=0.1,
@@ -293,11 +296,11 @@ class TransformerDecoderLayer(nn.Module):
         return self.forward_post(tgt, memory, tgt_mask, memory_mask,
                                  tgt_key_padding_mask, memory_key_padding_mask, pos, query_pos)
 
-
+#复制编码器层/解码器层
 def _get_clones(module, N):
     return nn.ModuleList([copy.deepcopy(module) for i in range(N)])
 
-
+#构建transformer
 def build_transformer(args):
     return Transformer(
         d_model=args.hidden_dim,
@@ -311,6 +314,7 @@ def build_transformer(args):
     )
 
 
+#返回需要的激活函数
 def _get_activation_fn(activation):
     """Return an activation function given a string"""
     if activation == "relu":

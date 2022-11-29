@@ -32,7 +32,7 @@ class PatchEmbed(nn.Module):
 
         return x
 
-
+#解码器
 decoder = nn.Sequential(
     nn.ReflectionPad2d((1, 1, 1, 1)),
     nn.Conv2d(512, 256, (3, 3)),
@@ -65,6 +65,7 @@ decoder = nn.Sequential(
     nn.Conv2d(64, 3, (3, 3)),
 )
 
+#vgg
 vgg = nn.Sequential(
     nn.Conv2d(3, 3, (1, 1)),
     nn.ReflectionPad2d((1, 1, 1, 1)),
@@ -121,6 +122,7 @@ vgg = nn.Sequential(
     nn.ReLU()  # relu5-4
 )
 
+#全连接层
 class MLP(nn.Module):
     """ Very simple multi-layer perceptron (also called FFN)"""
 
@@ -134,6 +136,8 @@ class MLP(nn.Module):
         for i, layer in enumerate(self.layers):
             x = F.relu(layer(x)) if i < self.num_layers - 1 else layer(x)
         return x
+
+#整个网络
 class StyTrans(nn.Module):
     """ This is the style transform transformer module """
     
